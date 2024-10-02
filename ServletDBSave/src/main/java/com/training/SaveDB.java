@@ -19,6 +19,22 @@ public class SaveDB extends HttpServlet {
 	String url = "jdbc:postgresql://localhost:5432/demo";
 	String uname = "postgres";
 	String pass = "257257";
+	Connection con;
+	
+	@Override
+	public void init() throws ServletException {
+		try {
+			Class.forName("org.postgresql.Driver");
+			con = DriverManager.getConnection(url, uname, pass);
+		} catch (ClassNotFoundException e) {	
+			System.out.println("First catch block init...");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Second catch block init...");
+			e.printStackTrace();
+		}
+		
+	}
 		
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -30,9 +46,9 @@ public class SaveDB extends HttpServlet {
 		String uid = request.getParameter("uid");
 
 		try {
-			Class.forName("org.postgresql.Driver"); // optional - for loading and registering
+//			Class.forName("org.postgresql.Driver"); // optional - for loading and registering
 			
-			Connection con = DriverManager.getConnection(url, uname, pass);
+//			Connection con = DriverManager.getConnection(url, uname, pass);
 //			System.out.println("After getting con object...");
 			PreparedStatement pstmt = con.prepareStatement("insert into servlet values (?,?,?)");
 			pstmt.setString(1, fname);
@@ -40,27 +56,31 @@ public class SaveDB extends HttpServlet {
 			pstmt.setString(3, uid);
 //			System.out.println("Before executing query");
 			int result = pstmt.executeUpdate();
-			pstmt.close();
-			
+			pstmt.close();			
 		
-			if(result > 0) {
+			if(result > 0) 
 				out.println("User Inserted successfully");
-			}else {
+			else
 				out.println("Error inserting user data...");
-			}
-			
-						
-			con.close();
-			System.out.println("Connection Closed...");
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("Catch first block...");
-			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Catch second block...");
+			System.out.println("Catch block doget method...");
 			e.printStackTrace();
 		}
 
-	}
+	}	
 
+	public void destroy() {
+		
+		if(con != null)	{
+			try {
+				con.close();
+				System.out.println("Connection Closed...");
+			} catch (SQLException e) {
+				System.out.println("Inside destroy catch block...");
+				e.printStackTrace();
+			}			
+		}
+	}
+	
 }
