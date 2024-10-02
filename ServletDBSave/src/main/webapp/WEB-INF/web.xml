@@ -19,4 +19,18 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <context-param>
+  <param-name>url</param-name>
+  <param-value>jdbc:postgresql://localhost:5432/demo</param-value>
+  </context-param>  
+  <context-param>
+  <param-name>uname</param-name>
+  <param-value>postgres</param-value>
+  </context-param>  
+  <context-param>
+  <param-name>pass</param-name>
+  <param-value>257257</param-value>
+  </context-param>
+  
 </web-app>

@@ -1,5 +1,6 @@
 package com.training;
 
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,16 +17,22 @@ import java.sql.SQLException;
 public class SaveDB extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	String url = "jdbc:postgresql://localhost:5432/demo";
-	String uname = "postgres";
-	String pass = "257257";
+//	String url = "jdbc:postgresql://localhost:5432/demo";
+//	String uname = "postgres";
+//	String pass = "257257";
 	Connection con;
 	
 	@Override
-	public void init() throws ServletException {
+	public void init(ServletConfig config) throws ServletException {
+
 		try {
 			Class.forName("org.postgresql.Driver");
+			String url = config.getServletContext().getInitParameter("url");
+			String uname = config.getServletContext().getInitParameter("uname");
+			String pass = config.getServletContext().getInitParameter("pass");
+					
 			con = DriverManager.getConnection(url, uname, pass);
+			
 		} catch (ClassNotFoundException e) {	
 			System.out.println("First catch block init...");
 			e.printStackTrace();
@@ -33,8 +40,22 @@ public class SaveDB extends HttpServlet {
 			System.out.println("Second catch block init...");
 			e.printStackTrace();
 		}
-		
 	}
+	
+//	@Override
+//	public void init() throws ServletException {
+//		try {
+//			Class.forName("org.postgresql.Driver");
+//			con = DriverManager.getConnection(url, uname, pass);
+//		} catch (ClassNotFoundException e) {	
+//			System.out.println("First catch block init...");
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			System.out.println("Second catch block init...");
+//			e.printStackTrace();
+//		}
+//		
+//	}
 		
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -64,7 +85,7 @@ public class SaveDB extends HttpServlet {
 				out.println("Error inserting user data...");
 
 		} catch (SQLException e) {
-			System.out.println("Catch block doget method...");
+			System.out.println("Catch block doGet method...");
 			e.printStackTrace();
 		}
 
